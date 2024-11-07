@@ -79,10 +79,12 @@ macro(ceu_import_libigl)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if(ARG_WITH_DEPS)
-        ceu_import_libigl_deps() # import deps
+        # ceu_import_libigl_deps() # import deps
     endif()
 
     ceu_find_libigl(${ARGN}) # find libigl
+
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_LIBIGL)
 endmacro(ceu_import_libigl)
 
 # ######################################################################################################################
@@ -122,8 +124,9 @@ function(ceu_target_link_libigl)
         set(ARG_COMPONENTS "glfw")
     endif()
 
-    # all components.
-    # igl::glfw, igl::embree, igl::imgui, igl::opengl, igl::stb, igl::predicates, igl::xml, igl_copyleft::cgal, igl_copyleft::comiso, igl_copyleft::core, igl_copyleft::cork, igl_copyleft::tetgen, igl_restricted::matlab, igl_restricted::mosek, igl_restricted::triangle
+    # all components. igl::glfw, igl::embree, igl::imgui, igl::opengl, igl::stb, igl::predicates, igl::xml,
+    # igl_copyleft::cgal, igl_copyleft::comiso, igl_copyleft::core, igl_copyleft::cork, igl_copyleft::tetgen,
+    # igl_restricted::matlab, igl_restricted::mosek, igl_restricted::triangle
     foreach(comp ${ARG_COMPONENTS})
         igl_include(${comp})
         target_link_libraries(${ARG_TARGET} ${ARG_VISIBILITY} "igl::${comp}")

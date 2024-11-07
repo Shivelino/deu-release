@@ -7,12 +7,17 @@
 # Ignore Dirs
 [Bb]uild*/
 [Cc]ache/
+[Cc]ode/
 [Dd]ownload/
 [Dd]ownloads/
 [Rr]epos/
 [Oo]ut/
+[Tt]emp
+[Tt]mp
+[Vv]cpkg_installed
 
 # Files
+*.zip
 *.log
 *.logs
 

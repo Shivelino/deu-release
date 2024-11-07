@@ -98,4 +98,14 @@ inline std::vector<std::string> string_split(const std::string& str, char delimi
     return tokens;  // todo: copy construct leads to low efficiency
 }
 
+/**
+ * @brief   generate tabs with specific cnt.
+ * @details  
+ * @par todo:
+ * @par history: 
+ */
+inline std::string string_tabs(size_t cnt) {
+    return std::string(cnt, '\t');
+}
+
 }  // namespace ceu

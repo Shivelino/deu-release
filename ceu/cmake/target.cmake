@@ -28,8 +28,7 @@ function(ceu_print_target_property)
         COMPILE_FEATURES
         INTERFACE_INCLUDE_DIRECTORIES
         INTERFACE_LINK_DIRECTORIES
-        INTERFACE_LINK_LIBRARIES
-    )
+        INTERFACE_LINK_LIBRARIES)
 
     message(STATUS "${ARG_TARGET} all properties:")
 

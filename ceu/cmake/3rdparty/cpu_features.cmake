@@ -68,6 +68,8 @@ endfunction(ceu_find_cpu_features)
 # ######################################################################################################################
 macro(ceu_import_cpu_features)
     ceu_find_cpu_features()
+
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_CPU_FEATURES)
 endmacro(ceu_import_cpu_features)
 
 # ######################################################################################################################

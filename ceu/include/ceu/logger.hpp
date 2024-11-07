@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-#include "traits.hpp"
+#include "metaprogramming/traits.hpp"
 
 namespace ceu {
 

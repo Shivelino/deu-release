@@ -67,6 +67,8 @@ endfunction(ceu_find_benchmark)
 # ######################################################################################################################
 macro(ceu_import_benchmark)
     ceu_find_benchmark()
+    
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_BENCHMARK)
 endmacro(ceu_import_benchmark)
 
 # ######################################################################################################################

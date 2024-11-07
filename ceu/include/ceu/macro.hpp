@@ -30,6 +30,19 @@
                               _46, _47, _48, _49, _50, _51, _52, _53, _54, _55, _56, _57, _58, _59, _60, _61, _62, _63, __COUNT, ...)                                                                                                                     \
     __COUNT
 #ifdef _MSC_VER
+
+//#ifdef _HAS_CXX20 // In MSVC, must add /Zc:preprocess to enable __VA_OPT__, but this will result serious compatible trouble
+#if 0
+//! 获取宏函数的参数个数(cnt)
+#define GET_MACRO_ARGS_COUNT(...)                                                                                                                                                                                                                            \
+    _GET_MACRO_ARGS_COUNT(__VA_ARGS__ __VA_OPT__(, ) 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, \
+                          14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
+
+//! 获取宏函数的参数个数并减一(cnt-1)
+#define GET_MACRO_ARGS_COUNT_S1(...)                                                                                                                                                                                                                         \
+    _GET_MACRO_ARGS_COUNT(__VA_ARGS__ __VA_OPT__(, ) 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, \
+                          13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1)
+#else
 //! 获取宏函数的参数个数(cnt)
 #define GET_MACRO_ARGS_COUNT(...)                                                                                                                                                                                                                          \
     MSVC_EXPAND(_GET_MACRO_ARGS_COUNT(__VA_ARGS__, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, \
@@ -39,6 +52,8 @@
 #define GET_MACRO_ARGS_COUNT_S1(...)                                                                                                                                                                                                                       \
     MSVC_EXPAND(_GET_MACRO_ARGS_COUNT(__VA_ARGS__, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, \
                                       13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0))
+#endif
+
 #else
 //! 获取宏函数的参数个数(cnt)
 #define GET_MACRO_ARGS_COUNT(...)                                                                                                                                                                                                                          \
@@ -174,3 +189,7 @@
 #ifndef ALWAYS_INLINE
 #define ALWAYS_INLINE inline
 #endif
+
+// get function ptr
+#define CEU_GET_FUNCTION_POINTER(_func) &_func
+#define CUE_GET_FUNCTION_POINTER(_obj, _func) &decltype(_obj)::_func

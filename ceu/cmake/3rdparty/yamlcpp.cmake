@@ -67,6 +67,8 @@ endfunction(ceu_find_yamlcpp)
 # ######################################################################################################################
 macro(ceu_import_yamlcpp)
     ceu_find_yamlcpp()
+
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_YAMLCPP)
 endmacro(ceu_import_yamlcpp)
 
 # ######################################################################################################################

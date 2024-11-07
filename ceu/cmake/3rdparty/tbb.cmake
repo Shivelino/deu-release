@@ -1,3 +1,5 @@
+include("${CMAKE_CURRENT_LIST_DIR}/../vcpkg/vcpkg.cmake")
+
 # ######################################################################################################################
 # Function: ceu_find_tbb
 #
@@ -8,41 +10,29 @@
 # Example Usage: ceu_find_tbb()
 # ######################################################################################################################
 function(ceu_find_tbb)
-    message(STATUS "=================================================================")
-    message(STATUS "Start finding third party: tbb.")
+    if(NOT TARGET TBB::tbb)
+        message(STATUS "=================================================================")
+        message(STATUS "Start finding third party: tbb.")
 
-    if(NOT DEFINED TBB_DIR)
-        message(WARNING "Not predefine `TBB_DIR`. If not found automatically, predefine `TBB_DIR`.")
+        set(options FIND_WITH_VCPKG)
+        set(oneValueArgs VCPKG_ARCH)
+        set(multiValueArgs)
+        cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+        if(DEFINED ARG_FIND_WITH_VCPKG) # find in vcpkg
+            ceu_find_library_vcpkg(LIBRARY TBB ARCH ${ARG_VCPKG_ARCH})
+        else() # find in system
+            find_package(TBB CONFIG REQUIRED)
+
+            if(NOT ${tbb_FOUND})
+                message(WARNING "TBB NOT found in system.")
+            else()
+                message(STATUS "Third party found: tbb.")
+            endif()
+        endif()
+
+        message(STATUS "=================================================================")
     endif()
-
-    # find in system
-    find_package(TBB CONFIG REQUIRED)
-
-    if(NOT ${tbb_FOUND})
-        message(WARNING "TBB NOT found in system.")
-
-        # Options
-        set(TBB_TEST OFF)
-
-        # fetch will get an target_link error. TODO: fix target_link error
-
-        # Fetch include(FetchContent)
-
-        # message(STATUS "Start FetchContent_Declare: tbb.")
-
-        # FetchContent_Declare(tbb PREFIX "${CMAKE_BINARY_DIR}/_deps/tbb" GIT_REPOSITORY
-        # https://github.com/oneapi-src/oneTBB.git GIT_TAG v2021.11.0)
-
-        # message(STATUS "Start FetchContent_MakeAvailable: tbb.")
-
-        # FetchContent_MakeAvailable(tbb)
-
-        # message(STATUS "Fetch Over: tbb.")
-    else()
-        message(STATUS "Third party found: tbb.")
-    endif()
-
-    message(STATUS "=================================================================")
 endfunction(ceu_find_tbb)
 
 # ######################################################################################################################
@@ -55,7 +45,9 @@ endfunction(ceu_find_tbb)
 # Example Usage: ceu_import_tbb()
 # ######################################################################################################################
 macro(ceu_import_tbb)
-    ceu_find_tbb()
+    ceu_find_tbb(${ARGN})
+
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_TBB)
 endmacro(ceu_import_tbb)
 
 # ######################################################################################################################

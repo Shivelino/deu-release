@@ -7,29 +7,34 @@
 #
 # Example Usage: ceu_find_qt6()
 # ######################################################################################################################
-function(ceu_find_qt6)
+macro(ceu_find_qt6)
+    message(STATUS "=================================================================")
+    message(STATUS "Start finding third party: qt6.")
+
     if(NOT DEFINED Qt6_PATH)
         message(WARNING "Not predefiend `Qt6_PATH`, if not found automatically, please predefine `Qt6_PATH`.")
     endif()
-
-    message(STATUS "=================================================================")
-    message(STATUS "Start finding third party: qt6.")
 
     set(options)
     set(oneValueArgs)
     set(multiValueArgs COMPONENTS)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_AUTORCC ON)
+    set(QT_CMAKE_EXPORT_NAMESPACE Qt6 CACHE STRING "")
     set(Qt6_DIR "${Qt6_PATH}/lib/cmake/Qt6")
 
-    if(ARG_COMPONENTS)
-        find_package(Qt6 REQUIRED COMPONENTS ${ARG_COMPONENTS})
-    else()
-        find_package(Qt6 REQUIRED)
+    if(NOT DEFINED ARG_COMPONENTS)
+        set(ARG_COMPONENTS Core Gui Widgets)
     endif()
 
-    qt6_standard_project_setup()
+    find_package(Qt6 REQUIRED COMPONENTS ${ARG_COMPONENTS})
+
+    qt_standard_project_setup()
     message(STATUS "=================================================================")
-endfunction(ceu_find_qt6)
+endmacro(ceu_find_qt6)
 
 # ######################################################################################################################
 # Macro: ceu_import_qt6
@@ -41,12 +46,9 @@ endfunction(ceu_find_qt6)
 # Example Usage: ceu_import_qt6()
 # ######################################################################################################################
 macro(ceu_import_qt6)
-    set(options)
-    set(oneValueArgs)
-    set(multiValueArgs COMPONENTS)
-    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    ceu_find_qt6(${ARGN})
 
-    ceu_find_qt6(COMPONENTS ${ARG_COMPONENTS})
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_QT6)
 endmacro(ceu_import_qt6)
 
 # ######################################################################################################################
@@ -71,23 +73,18 @@ function(ceu_target_link_qt6)
 
     foreach(comp ${ARG_COMPONENTS})
         target_include_directories(${ARG_TARGET} ${ARG_VISIBILITY}
-                                   "$<TARGET_PROPERTY:Qt6::${comp},INTERFACE_INCLUDE_DIRECTORIES>")
-
-        if(DEFINED ARG_VISIBILITY)
-            target_link_libraries(${ARG_TARGET} ${ARG_VISIBILITY} "Qt::${comp}")
-        else()
-            target_link_libraries(${ARG_TARGET} "Qt::${comp}")
-        endif()
-
+            "$<TARGET_PROPERTY:Qt6::${comp},INTERFACE_INCLUDE_DIRECTORIES>")
+        target_link_libraries(${ARG_TARGET} ${ARG_VISIBILITY} "Qt::${comp}")
         add_custom_command(
             TARGET ${ARG_TARGET}
             POST_BUILD
             COMMAND
-                ${CMAKE_COMMAND} ARGS -E copy
-                "$<$<CONFIG:Debug>:${Qt6_PATH}/bin/Qt6${comp}d.dll>$<$<NOT:$<CONFIG:Debug>>:${Qt6_PATH}/bin/Qt6${comp}.dll>"
-                ${ARG_DLL_DEST_DIR})
+            ${CMAKE_COMMAND} ARGS -E copy
+            "$<$<CONFIG:Debug>:${Qt6_PATH}/bin/Qt6${comp}d.dll>$<$<NOT:$<CONFIG:Debug>>:${Qt6_PATH}/bin/Qt6${comp}.dll>"
+            ${ARG_DLL_DEST_DIR})
     endforeach(comp ${ARG_COMPONENTS})
 
+    set_target_properties(${ARG_TARGET} PROPERTIES AUTOMOC TRUE)
     add_custom_command(
         TARGET ${ARG_TARGET}
         POST_BUILD

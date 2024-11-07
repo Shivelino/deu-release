@@ -14,7 +14,7 @@
 #include <random>
 #include <unordered_set>
 
-#include "concepts.h"
+#include "metaprogramming/concepts.hpp"
 
 namespace ceu {
 
@@ -39,7 +39,8 @@ inline int rand_int() {
     return rand_int(INT_MIN, INT_MAX);
 }
 
-template <integral_type _Ty>
+template <typename _Ty>
+    requires std::is_arithmetic_v<_Ty>
 inline _Ty random(_Ty num1, _Ty num2) {
     _Ty min_limit = std::min(num1, num2);
     _Ty max_limit = std::max(num1, num2);
@@ -50,19 +51,9 @@ inline _Ty random(_Ty num1, _Ty num2) {
     return distribution(gen);
 }
 
-template <floating_type _Ty>
-inline _Ty random(_Ty num1, _Ty num2) {
-    _Ty min_limit = std::min(num1, num2);
-    _Ty max_limit = std::max(num1, num2);
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<_Ty> distribution(min_limit, max_limit);
-    return distribution(gen);
-}
-
-template <integral_type _Ty>
-class RandomIntegralGenerator {
+template <typename _Ty>
+    requires std::is_arithmetic_v<_Ty>
+class RandomGenerator {
 private:
     _Ty _min_limit;
     _Ty _max_limit;
@@ -76,47 +67,6 @@ public:
         std::random_device rd;
         _gen = std::mt19937(rd());
         _distribution = std::uniform_int_distribution<_Ty>(_min_limit, _max_limit);
-    }
-
-public:
-    _Ty random() { return _distribution(_gen); }
-
-    _Ty random(_Ty except_num) {
-        _Ty num;
-        do
-            num = _distribution(_gen);
-        while (num == except_num);
-        return num;
-    }
-
-    _Ty random(const std::vector<_Ty>& except_nums) {
-        std::unordered_set<_Ty> except_nums_hashset;
-        for (_Ty n : except_nums)
-            except_nums_hashset.insert(n);
-
-        _Ty num;
-        do
-            num = _distribution(_gen);
-        while (except_nums_hashset.find(num) != except_nums_hashset.end());
-        return num;
-    }
-};
-
-template <floating_type _Ty>
-class RandomFloatingGenerator {
-private:
-    _Ty _min_limit;
-    _Ty _max_limit;
-    std::mt19937 _gen;
-    std::uniform_real_distribution<_Ty> _distribution;
-
-public:
-    RandomFloatingGenerator(_Ty num1, _Ty num2) {
-        _min_limit = std::min(num1, num2);
-        _max_limit = std::max(num1, num2);
-        std::random_device rd;
-        _gen = std::mt19937(rd());
-        _distribution = std::uniform_real_distribution<_Ty>(_min_limit, _max_limit);
     }
 
 public:

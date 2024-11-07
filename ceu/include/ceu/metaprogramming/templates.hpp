@@ -17,7 +17,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "macro.hpp"
+#include "../macro.hpp"
 
 namespace ceu {
 
@@ -238,4 +238,30 @@ constexpr bool is_set_type_v = is_std_set_v<_Ty> || is_std_unordered_set_v<_Ty>;
 template <typename _Ty>
 concept set_type = is_std_set_v<_Ty> || is_std_unordered_set_v<_Ty>;
 
+/**
+ * @brief   count function args.
+ * @details usage: `count_args<decltype(&TestClass::member_func)>::value`
+ * @par todo:
+ * @par history: 
+ */
+template <typename T>
+struct count_func_args;
+
+// normal function ptr
+template <typename ReturnType, typename... Args>
+struct count_func_args<ReturnType(Args...)> {
+    static constexpr size_t value = sizeof...(Args);
+};
+
+// member function ptr
+template <typename ReturnType, typename ClassType, typename... Args>
+struct count_func_args<ReturnType (ClassType::*)(Args...)> {
+    static constexpr size_t value = sizeof...(Args);
+};
+
+// const member function ptr
+template <typename ReturnType, typename ClassType, typename... Args>
+struct count_func_args<ReturnType (ClassType::*)(Args...) const> {
+    static constexpr size_t value = sizeof...(Args);
+};
 }  // namespace ceu

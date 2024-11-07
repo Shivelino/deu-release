@@ -1,5 +1,5 @@
 # ######################################################################################################################
-# Function: ceu_find_boost
+# Macro: ceu_find_boost
 #
 # Description: Find boost. Please predefine `BOOST_ROOT` path.
 #
@@ -7,7 +7,7 @@
 #
 # Example Usage: ceu_find_boost("1.84.0")
 # ######################################################################################################################
-function(ceu_find_boost)
+macro(ceu_find_boost)
     message(STATUS "=================================================================")
     message(STATUS "Start finding third party: boost.")
 
@@ -16,19 +16,19 @@ function(ceu_find_boost)
     set(multiValueArgs COMPONENTS)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if(NOT DEFINED BOOST_ROOT)
-        message(WARNING "Not predefiend `BOOST_ROOT`, if not found automatically, please predefine `BOOST_ROOT`.")
-    endif()
-
     # find in system
-    if(DEFINED ARG_COMPONENTS)
-        find_package(Boost ${ARG_MIN_VERSION} REQUIRED COMPONENTS ${ARG_COMPONENTS})
-    else()
-        find_package(Boost ${ARG_MIN_VERSION} REQUIRED) # find_package(Boost QUIET)
+    find_package(Boost ${ARG_MIN_VERSION} REQUIRED COMPONENTS ${ARG_COMPONENTS})
+
+    if(NOT Boost_FOUND)
+        if(NOT DEFINED Boost_DIR)
+            message(WARNING "Not found automatically, not predefiend `Boost_DIR`")
+        else()
+            message(WARNING "Not found automatically, predefiend `Boost_DIR`, probably wrong path")
+        endif()
     endif()
 
     message(STATUS "=================================================================")
-endfunction(ceu_find_boost)
+endmacro(ceu_find_boost)
 
 # ######################################################################################################################
 # Macro: ceu_import_boost
@@ -48,6 +48,8 @@ macro(ceu_import_boost)
     ceu_find_boost(MIN_VERSION ${ARG_MIN_VERSION} COMPONENTS ${ARG_COMPONENTS}) # find boost
 
     set(CEU_BOOST_LIB_DIR "${BOOST_ROOT}/stage/lib")
+    
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_BOOST)
 endmacro(ceu_import_boost)
 
 # ######################################################################################################################

@@ -77,6 +77,8 @@ macro(ceu_import_spdlog)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     ceu_find_spdlog(${ARG_HEADER_ONLY})
+
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_SPDLOG)
 endmacro(ceu_import_spdlog)
 
 # ######################################################################################################################

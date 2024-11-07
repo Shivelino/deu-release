@@ -69,6 +69,9 @@ endfunction(ceu_find_googletest)
 # ######################################################################################################################
 macro(ceu_import_googletest)
     ceu_find_googletest()
+
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_GOOGLETEST)
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_GTEST)
 endmacro(ceu_import_googletest)
 
 # ######################################################################################################################

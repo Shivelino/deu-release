@@ -10,6 +10,8 @@
  * @par history: 
  *********************************************************************/
 #pragma once
+#include <memory>
+
 #include "types.hpp"
 
 namespace ceu {
@@ -19,5 +21,17 @@ namespace ceu {
 template <typename Ret = void*, typename Relay = char>
 Ret ptr_offset(const void* in_ptr, offset_t offset) {
     return (Ret)((Relay*)in_ptr + offset);
+}
+
+/**
+ * @brief   Create a shared ptr.
+ * @details  
+ * @par todo:
+ * @par history: 
+ */
+template <typename RealTy, typename... ArgsTy>
+std::shared_ptr<RealTy> api_create_sptr(ArgsTy&&... args) {
+    // 移交raw指针给shared_ptr，这里不使用make_shared的原因是make_shared调用了其他的函数无法访问private构造器
+    return std::shared_ptr<RealTy>(new RealTy(std::forward<ArgsTy>(args)...));
 }
 }  // namespace ceu

@@ -73,7 +73,7 @@ class AlphaDistribution
 public:
 
 	enum Method {
-		METHOD_ERROR_DIF,	//!< Error diffusion using Floyd–Steinberg dithering
+		METHOD_ERROR_DIF,	//!< Error diffusion using Floydï¿½Steinberg dithering
 		METHOD_PYRAMID,		//!< Alpha Pyramid
 	};
 

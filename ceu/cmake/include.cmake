@@ -44,11 +44,6 @@ endfunction(ceu_target_include_header_only_3rdparty)
 # Example Usage: ceu_target_include_headers(TARGET project_name VISIBILITY PUBLIC)
 # ######################################################################################################################
 function(ceu_target_include_headers)
-    set(options)
-    set(oneValueArgs TARGET VISIBILITY)
-    set(multiValueArgs)
-    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-    ceu_target_include_external_utils_headers(TARGET ${ARG_TARGET} VISIBILITY ${ARG_VISIBILITY})
-    ceu_target_include_header_only_3rdparty(TARGET ${ARG_TARGET} VISIBILITY ${ARG_VISIBILITY})
+    ceu_target_include_external_utils_headers(${ARGN})
+    ceu_target_include_header_only_3rdparty(${ARGN})
 endfunction(ceu_target_include_headers)

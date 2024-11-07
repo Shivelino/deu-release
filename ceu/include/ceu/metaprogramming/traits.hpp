@@ -15,7 +15,7 @@
  * @par history: 
  *********************************************************************/
 #pragma once
-#include "macro.hpp"
+#include "../macro.hpp"
 
 // traits: 声明时给类附加功能
 #define extend : public

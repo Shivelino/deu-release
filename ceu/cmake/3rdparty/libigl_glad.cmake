@@ -51,7 +51,8 @@ macro(ceu_find_libigl_glad)
 
     if(NOT ${libigl_glad_FOUND})
         message(WARNING "Libigl_glad NOT found in system.")
-        ceu_fetch_libigl_glad(PREFIX "${CMAKE_BINARY_DIR}/_deps/libigl_glad" GIT_TAG ead2d21fd1d9f566d8f9a9ce99ddf85829258c7a)
+        ceu_fetch_libigl_glad(PREFIX "${CMAKE_BINARY_DIR}/_deps/libigl_glad" GIT_TAG
+                              ead2d21fd1d9f566d8f9a9ce99ddf85829258c7a)
     else()
         message(STATUS "Third party found: libigl-glad.")
     endif()
@@ -70,6 +71,8 @@ endmacro(ceu_find_libigl_glad)
 # ######################################################################################################################
 macro(ceu_import_libigl_glad)
     ceu_find_libigl_glad()
+
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_LIBIGL_GLAD)
 endmacro(ceu_import_libigl_glad)
 
 # ######################################################################################################################

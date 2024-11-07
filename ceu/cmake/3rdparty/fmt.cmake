@@ -72,12 +72,9 @@ endfunction(ceu_find_fmt)
 # Example Usage: ceu_import_fmt()
 # ######################################################################################################################
 macro(ceu_import_fmt)
-    set(options HEADER_ONLY)
-    set(oneValueArgs)
-    set(multiValueArgs)
-    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    ceu_find_fmt(${ARGN})
 
-    ceu_find_fmt(${ARG_HEADER_ONLY})
+    add_definitions(-DCEU_3RDPARTY_IMPORTED_FMT)
 endmacro(ceu_import_fmt)
 
 # ######################################################################################################################
